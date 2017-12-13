@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <body>
+      <div id="components"></div>
+    </body>
+    <script src="http://localhost:3030/oc-client/client.js"></script>
+    <script>
+      var headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      var components = {"components": [{"name": "cta-oc", "version":"1.X.X"},{"name": "weather-oc", "version":"1.X.X"}]};
+      var request = new Request('http://localhost:3030', 
+                      { method:'POST', body: JSON.stringify(components), headers : headers});
+      fetch(request)
+        .then((res => {
+          console.dir(res);
+          if(res.status === 200){
+            return res.json();
+          }
+          else{
+            throw new Error('An error occurred');
+          }
+        }))
+        .then(data => {
+            var componentHTML = "";
+            console.dir(data);
+            data.map((c =>{
+              componentHTML += c.response.html;
+            })); 
+            document.getElementById('components').insertAdjacentHTML('afterbegin', componentHTML);
+        })
+        .catch((e) => {
+        console.error(e); 
+        })
+    </script>
+
+</html>
